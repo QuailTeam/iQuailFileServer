@@ -8,5 +8,6 @@ find_package(Boost 1.68.0 REQUIRED system)
 
 include_directories(common)
 
+subdirs(common)
 subdirs(server)
 subdirs(client)

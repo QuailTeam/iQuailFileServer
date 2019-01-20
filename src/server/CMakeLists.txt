@@ -6,4 +6,4 @@ add_executable(iQuailServer
 		Session.cpp
 		)
 
-target_link_libraries(iQuailServer ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
+target_link_libraries(iQuailServer common ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
