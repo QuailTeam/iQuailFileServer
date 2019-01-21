@@ -5,7 +5,7 @@
 //
 
 void CommandManager::start() {
-  _session->readString(getAsCallback<CommandManager>(&CommandManager::receiveCommand));
+  _session->readString(getAsCallback(&CommandManager::receiveCommand));
 }
 
 void CommandManager::receiveCommand(std::string const &cmd) {
