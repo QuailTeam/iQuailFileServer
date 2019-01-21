@@ -1,12 +1,7 @@
 #pragma once
 
 #include "Network.hpp"
-#include <boost/system/error_code.hpp>
 #include <functional>
-
-//
-#include <iostream>
-//
 
 // Creation of a custom placeholder to use in variadic templates.
 template <int N> struct CustomPlaceholder { static CustomPlaceholder ph; };
