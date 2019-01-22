@@ -1,4 +1,3 @@
-#include "Protocol.hpp"
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -26,10 +25,11 @@ int main(int argc, char* argv[])
 
     std::cout << "Choose command (None=0, File=1, ...):" << std::endl;
     char extraData[16] = "hello there";
-    protocol::RawRequest req = {protocol::Command::None, static_cast<uint32_t>(std::strlen(extraData))};
-    scanf("%d", &req.cmd);
-    boost::asio::write(s, boost::asio::buffer(&req, sizeof(req)));
-    boost::asio::write(s, boost::asio::buffer(extraData, req.extraSize));
+    
+    //protocol::RawRequest req = {protocol::Command::None, static_cast<uint32_t>(std::strlen(extraData))};
+    //scanf("%d", &req.cmd);
+    //boost::asio::write(s, boost::asio::buffer(&req, sizeof(req)));
+    //boost::asio::write(s, boost::asio::buffer(extraData, req.extraSize));
 
     // char reply[max_length];
     // size_t reply_length = boost::asio::read(s,

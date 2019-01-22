@@ -4,7 +4,15 @@
 
 class CmdEcho : public Command {
 public:
-  using Command::Command;
+  CmdEcho(std::shared_ptr<Network> session, std::function<void()> f)
+      : Command(std::move(session)), _callback(f) {}
+  ~CmdEcho() {
+    _callback();
+    std::cerr << "dtor CmdEcho" << std::endl;
+  }
 
-  void start() {}
+  void start() final override;
+
+private:
+  std::function<void()> _callback;
 };

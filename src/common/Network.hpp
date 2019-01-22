@@ -14,14 +14,14 @@ public:
   Network(Socket socket) : _socket(std::move(socket)) {}
   ~Network() { std::cerr << "dtor network" << std::endl; }
 
-  void readString(std::function<void(std::string const &)> callback);
+  void readString(std::function<void(const std::string &)> callback);
   // void writeString(std::string const &s, std::function<void()> callback);
   // void writeBinary();
   // void readBinary();
 
 private:
-  void handleError(std::string const &functionName,
-                   boost::system::error_code const &ec) const;
+  void handleError(const std::string &functionName,
+                   const boost::system::error_code &ec) const;
 
   Socket _socket;
   boost::asio::streambuf _strBuff;

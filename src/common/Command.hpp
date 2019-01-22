@@ -17,7 +17,7 @@ class Command : public std::enable_shared_from_this<Command> {
 public:
   Command() = delete;
   Command(std::shared_ptr<Network> session) : _session(std::move(session)) {}
-  virtual ~Command() { std::cerr << "dtor command" << std::endl; }
+  virtual ~Command() {}
 
   virtual void start() = 0;
 
