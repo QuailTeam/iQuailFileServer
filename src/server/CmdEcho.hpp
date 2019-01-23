@@ -4,15 +4,8 @@
 
 class CmdEcho : public Command {
 public:
-  CmdEcho(std::shared_ptr<Network> session, std::function<void()> f)
-      : Command(std::move(session)), _callback(f) {}
-  ~CmdEcho() {
-    _callback();
-    std::cerr << "dtor CmdEcho" << std::endl;
-  }
+  using Command::Command;
+  ~CmdEcho() { std::cerr << "dtor CmdEcho" << std::endl; }
 
-  void start() final override;
-
-private:
-  std::function<void()> _callback;
+  void start(const std::vector<std::string> &args = {}) final override;
 };

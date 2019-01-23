@@ -14,8 +14,9 @@ public:
   Network(Socket socket) : _socket(std::move(socket)) {}
   ~Network() { std::cerr << "dtor network" << std::endl; }
 
-  void readString(std::function<void(const std::string &)> callback);
-  // void writeString(std::string const &s, std::function<void()> callback);
+  void readString(std::function<void(const std::string &)> callback = nullptr);
+  void writeString(const std::string &s,
+                   std::function<void()> callback = nullptr);
   // void writeBinary();
   // void readBinary();
 

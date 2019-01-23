@@ -1,36 +1,45 @@
 #include "CommandManager.hpp"
 #include "CmdEcho.hpp"
 #include "Protocol.h"
+#include <sstream>
 #include <unordered_map>
+#include <vector>
 
-//
-#include <iostream>
-//
+void CommandManager::start(const std::vector<std::string> & /*args*/) {
+  entryPoint();
+}
 
-void CommandManager::start() {
+void CommandManager::entryPoint() {
   _session->readString(getAsCallback(&CommandManager::receiveCommand));
 }
 
 void CommandManager::receiveCommand(const std::string &s) {
-  static const std::unordered_map<std::string, void (CommandManager::*)()>
+  static const std::unordered_map<
+      std::string, void (CommandManager::*)(const std::vector<std::string> &)>
       cmdMap = {
           {protocol::command::names[protocol::command::Exit],
            &CommandManager::closeConnection},
           {protocol::command::names[protocol::command::Echo],
            &CommandManager::startCommand<CmdEcho>},
       };
-  auto cmd = cmdMap.find(s);
-  if (cmd == cmdMap.end())
-    sendBadCommand(s);
+  std::istringstream iss(s);
+  std::string cmdName;
+  iss >> cmdName;
+  std::vector<std::string> cmdArgs(std::istream_iterator<std::string>{iss},
+                                   std::istream_iterator<std::string>());
+  auto cmdIt = cmdMap.find(cmdName);
+  if (cmdIt == cmdMap.end())
+    sendBadCommand(cmdName);
   else
-    (*this.*(cmd->second))();
+    (*this.*(cmdIt->second))(cmdArgs);
 }
 
-void CommandManager::closeConnection() {
-  std::cerr << "Closing Connection" << std::endl; //SEND
+void CommandManager::closeConnection(
+    const std::vector<std::string> & /*args*/) {
+  _session->writeString("Closing Connection");
 }
 
 void CommandManager::sendBadCommand(const std::string &cmd) {
-  std::cerr << "Bad Command: " << cmd << std::endl; //SEND
-  start();
+  _session->writeString("Bad Command: " + cmd,
+                        getAsCallback(&CommandManager::entryPoint));
 }

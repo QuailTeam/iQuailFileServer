@@ -1,3 +1,1 @@
-cmd params in constructor
-callback in Command destructor (and receive it via constructor)
-
+Error handling

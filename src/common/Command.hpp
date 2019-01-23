@@ -16,10 +16,15 @@ struct is_placeholder<::CustomPlaceholder<N>> : std::integral_constant<int, N> {
 class Command : public std::enable_shared_from_this<Command> {
 public:
   Command() = delete;
-  Command(std::shared_ptr<Network> session) : _session(std::move(session)) {}
-  virtual ~Command() {}
+  Command(std::shared_ptr<Network> session,
+          std::function<void()> exitCallback = nullptr)
+      : _session(std::move(session)), _exitCallback(exitCallback) {}
+  virtual ~Command() {
+    if (_exitCallback)
+      _exitCallback();
+  }
 
-  virtual void start() = 0;
+  virtual void start(const std::vector<std::string> &args = {}) = 0;
 
 protected:
   template <typename ReturnType, class Class, class... Args>
@@ -30,8 +35,6 @@ protected:
         std::make_integer_sequence<int, sizeof...(Args)>());
   }
 
-  std::shared_ptr<Network> _session;
-
 private:
   template <typename ReturnType, class Class, class... Args, int... Indices>
   inline std::function<ReturnType(Args...)> getAsCallback(
@@ -40,4 +43,10 @@ private:
     auto self = std::static_pointer_cast<Class>(shared_from_this());
     return std::bind(method, self, CustomPlaceholder<Indices + 1>::ph...);
   }
+
+protected:
+  std::shared_ptr<Network> _session;
+
+private:
+  std::function<void()> _exitCallback;
 };
