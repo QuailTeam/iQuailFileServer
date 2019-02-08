@@ -1,6 +1,6 @@
 #include "CmdEchoBin.hpp"
 
-void CmdEchoBin::start(const std::vector<std::string> &args) {
+void CmdEchoBin::start(const std::vector<std::string> & /*args*/) {
   _session->readBinary(getAsCallback(&CmdEchoBin::readInputAsBin));
 }
 

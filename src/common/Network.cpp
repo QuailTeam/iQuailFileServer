@@ -23,7 +23,7 @@ void Network::writeString(const std::string &s,
   std::string sLF(s + '\n');
   boost::asio::async_write(
       _socket, boost::asio::buffer(sLF.c_str(), sLF.size()),
-      [self, callback](boost::system::error_code ec, size_t /*bytes*/) {
+      [self, callback](boost::system::error_code ec, size_t /*s*/) {
         if (ec) {
           self->handleError(__FUNCTION__, ec);
           return;
@@ -46,7 +46,7 @@ void Network::readBinary(
   auto self = shared_from_this();
   boost::asio::async_read(
       _socket, boost::asio::buffer(binaryData->data(), totalSize),
-      [self, binaryData, callback](boost::system::error_code ec, size_t bytes) {
+      [self, binaryData, callback](boost::system::error_code ec, size_t /*s*/) {
         if (ec) {
           self->handleError(__FUNCTION__, ec);
           return;
@@ -67,7 +67,7 @@ void Network::writeBinary(std::shared_ptr<std::vector<char>> b,
   auto self = shared_from_this();
   boost::asio::async_write(
       _socket, boost::asio::buffer(*b.get()),
-      [self, b, callback](boost::system::error_code ec, size_t bytes) {
+      [self, b, callback](boost::system::error_code ec, size_t /*s*/) {
         if (ec) {
           self->handleError(__FUNCTION__, ec);
           return;
