@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 find_package(Threads)
-find_package(Boost 1.68.0 REQUIRED system)
+find_package(Boost 1.62.0 REQUIRED system)
 
 include_directories(common)
 

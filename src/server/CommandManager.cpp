@@ -1,5 +1,6 @@
 #include "CommandManager.hpp"
 #include "CmdEcho.hpp"
+#include "CmdEchoBin.hpp"
 #include "Protocol.h"
 #include <sstream>
 #include <unordered_map>
@@ -21,6 +22,8 @@ void CommandManager::receiveCommand(const std::string &s) {
            &CommandManager::closeConnection},
           {protocol::command::names[protocol::command::Echo],
            &CommandManager::startCommand<CmdEcho>},
+          {protocol::command::names[protocol::command::EchoBin],
+           &CommandManager::startCommand<CmdEchoBin>},
       };
   std::istringstream iss(s);
   std::string cmdName;
