@@ -32,6 +32,7 @@ public:
 private:
 
   bool initReadFile(const std::string &path);
+  bool initWriteFile(const std::string &path);
 
   void writeSize(std::size_t size, boost::system::error_code &ec);
   std::size_t readSize(boost::system::error_code &ec);
@@ -45,7 +46,7 @@ private:
   boost::asio::streambuf _strBuff;
 
   // File temporary attributes
-  enum { BufferLength = 40960 };
+  enum { BufferLength = 32768 };
   std::array<char, BufferLength> _fileBuff;
   std::streamsize _fileSize;
   std::fstream _file;

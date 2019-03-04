@@ -84,15 +84,16 @@ void Network::readFile(const std::string &path,
     return;
   auto self = shared_from_this();
   _socket.async_read_some(
-      boost::asio::buffer(_fileBuff.data(), BufferLength),
+      boost::asio::buffer(_fileBuff.data(), _fileBuff.size()),
       [self, callback](boost::system::error_code ec, size_t bytesTransferred) {
         if (ec) {
           self->handleError(__FUNCTION__, ec);
           return;
         }
         if (bytesTransferred > 0) {
-          self->_file.write(self->_fileBuff.data(),
-                            static_cast<std::streamsize>(bytesTransferred));
+          self->_file.write(
+              self->_fileBuff.data(),
+              static_cast<std::streamsize>(bytesTransferred)); // TODO check
           if (self->_file.tellp() >= self->_fileSize) {
             self->_file.close();
             if (callback)
@@ -126,7 +127,51 @@ bool Network::initReadFile(const std::string &path) {
 }
 
 void Network::writeFile(const std::string &path,
-                        std::function<void()> callback) {}
+                        std::function<void()> callback) {
+  if (!initWriteFile(path))
+    return;
+  _file.read(_fileBuff.data(), _fileBuff.size()); // TODO check
+  auto self = shared_from_this();
+  boost::asio::async_write(
+      _socket, boost::asio::buffer(_fileBuff.data(), _file.gcount()),
+      [self, callback](boost::system::error_code ec, size_t /*s*/) {
+        if (ec) {
+          self->handleError(__FUNCTION__, ec);
+          return;
+        }
+        if (self->_file.eof()) {
+          self->_file.close();
+          if (callback)
+            callback();
+          return;
+        }
+        self->writeFile("", callback);
+      });
+}
+
+bool Network::initWriteFile(const std::string &path) {
+  if (_file.is_open())
+    return true;
+
+  _file.open(path,
+             std::ofstream::in | std::ofstream::binary | std::ofstream::ate);
+  if (_file.fail()) {
+    // TODO report fail
+    return false;
+  }
+
+  _file.seekg(0, _file.end);
+  _fileSize = _file.tellg();
+  _file.seekg(0, _file.beg);
+
+  boost::system::error_code ec;
+  writeSize(static_cast<size_t>(_fileSize), ec);
+  if (ec) {
+    handleError(__FUNCTION__, ec);
+    return false;
+  }
+  return true;
+}
 
 void Network::writeSize(std::size_t size, boost::system::error_code &ec) {
   boost::asio::write(_socket, boost::asio::buffer(&size, sizeof(std::size_t)),
