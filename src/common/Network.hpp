@@ -1,8 +1,8 @@
 #pragma once
 
 #include <boost/asio.hpp>
-#include <string>
 #include <fstream>
+#include <string>
 
 //
 #include <iostream>
@@ -30,7 +30,6 @@ public:
                  std::function<void()> callback = nullptr);
 
 private:
-
   bool initReadFile(const std::string &path);
   bool initWriteFile(const std::string &path);
 
