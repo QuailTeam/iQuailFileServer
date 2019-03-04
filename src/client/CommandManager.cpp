@@ -7,12 +7,18 @@ void CommandManager::start(const std::vector<std::string> & /*args*/) {
 
 void CommandManager::entryPoint() {
   std::string cmd = protocol::command::names[protocol::command::GetFile];
-  cmd += " ./iQuailServer";
+  std::string input;
+  std::cout << "Which file do you want to get from the server ?\n";
+  std::cin >> input;
+  cmd += " " + input;
   _session->writeString(cmd, getAsCallback(&CommandManager::receiveFile));
 }
 
 void CommandManager::receiveFile() {
-  _session->readFile("LeBonFichier", getAsCallback(&CommandManager::end));
+  std::string input;
+  std::cout << "How do you want to name this file ?\n";
+  std::cin >> input;
+  _session->readFile(input, getAsCallback(&CommandManager::end));
 }
 
 void CommandManager::end() {

@@ -110,17 +110,19 @@ bool Network::initReadFile(const std::string &path) {
   if (_file.is_open())
     return true;
 
-  _file.open(path,
-             std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
-  if (_file.fail()) {
-    // TODO report fail
-    return false;
-  }
-
   boost::system::error_code ec;
   _fileSize = static_cast<std::streamsize>(readSize(ec));
   if (ec) {
     handleError(__FUNCTION__, ec);
+    return false;
+  }
+  if (!_fileSize)
+    return false;
+
+  _file.open(path,
+             std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
+  if (_file.fail()) {
+    // TODO report fail
     return false;
   }
   return true;
@@ -128,8 +130,11 @@ bool Network::initReadFile(const std::string &path) {
 
 void Network::writeFile(const std::string &path,
                         std::function<void()> callback) {
-  if (!initWriteFile(path))
+  if (!initWriteFile(path)) {
+    boost::system::error_code ec;
+    writeSize(0, ec);
     return;
+  }
   _file.read(_fileBuff.data(), _fileBuff.size()); // TODO check
   auto self = shared_from_this();
   boost::asio::async_write(
