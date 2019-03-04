@@ -77,6 +77,57 @@ void Network::writeBinary(std::shared_ptr<std::vector<char>> b,
       });
 }
 
+void Network::readFile(const std::string &path,
+                       std::function<void()> callback) {
+
+  if (!initReadFile(path))
+    return;
+  auto self = shared_from_this();
+  _socket.async_read_some(
+      boost::asio::buffer(_fileBuff.data(), BufferLength),
+      [self, callback](boost::system::error_code ec, size_t bytesTransferred) {
+        if (ec) {
+          self->handleError(__FUNCTION__, ec);
+          return;
+        }
+        if (bytesTransferred > 0) {
+          self->_file.write(self->_fileBuff.data(),
+                            static_cast<std::streamsize>(bytesTransferred));
+          if (self->_file.tellp() >= self->_fileSize) {
+            self->_file.close();
+            if (callback)
+              callback();
+            return;
+          }
+        }
+        self->readFile("", callback);
+      });
+}
+
+bool Network::initReadFile(const std::string &path) {
+
+  if (_file.is_open())
+    return true;
+
+  _file.open(path,
+             std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
+  if (_file.fail()) {
+    // TODO report fail
+    return false;
+  }
+
+  boost::system::error_code ec;
+  _fileSize = static_cast<std::streamsize>(readSize(ec));
+  if (ec) {
+    handleError(__FUNCTION__, ec);
+    return false;
+  }
+  return true;
+}
+
+void Network::writeFile(const std::string &path,
+                        std::function<void()> callback) {}
+
 void Network::writeSize(std::size_t size, boost::system::error_code &ec) {
   boost::asio::write(_socket, boost::asio::buffer(&size, sizeof(std::size_t)),
                      ec); // TODO make async

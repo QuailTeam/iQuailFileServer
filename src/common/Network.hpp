@@ -2,6 +2,7 @@
 
 #include <boost/asio.hpp>
 #include <string>
+#include <fstream>
 
 //
 #include <iostream>
@@ -22,11 +23,16 @@ public:
                       callback = nullptr);
   void writeBinary(std::shared_ptr<std::vector<char>> b,
                    std::function<void()> callback = nullptr);
-  // void readFile(std::function<void()> callback = nullptr);
-  // void writeFile(const std::string &filePath,
-  //                std::function<void()> callback = nullptr);
+
+  void readFile(const std::string &path,
+                std::function<void()> callback = nullptr);
+  void writeFile(const std::string &path,
+                 std::function<void()> callback = nullptr);
 
 private:
+
+  bool initReadFile(const std::string &path);
+
   void writeSize(std::size_t size, boost::system::error_code &ec);
   std::size_t readSize(boost::system::error_code &ec);
 
@@ -34,7 +40,13 @@ private:
                    const boost::system::error_code &ec) const;
 
   Socket _socket;
+
+  // String temporary attributes
   boost::asio::streambuf _strBuff;
+
+  // File temporary attributes
   enum { BufferLength = 40960 };
-  std::array<char, BufferLength> _buff;
+  std::array<char, BufferLength> _fileBuff;
+  std::streamsize _fileSize;
+  std::fstream _file;
 };
