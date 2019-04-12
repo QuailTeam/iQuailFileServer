@@ -1,5 +1,6 @@
 #custom
 build/*
+test/*
 .vscode/*
 
 # Prerequisites

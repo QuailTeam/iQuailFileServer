@@ -17,7 +17,7 @@ private:
 
   template <class CmdClass>
   void startCommand(const std::vector<std::string> &args) {
-    std::make_shared<CmdClass>(_session,
+    std::make_shared<CmdClass>(_session, _fileMgr,
                                getAsCallback(&CommandManager::entryPoint))
         ->start(args);
   }

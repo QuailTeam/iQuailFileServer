@@ -8,7 +8,7 @@ if ( CMAKE_COMPILER_IS_GNUCC )
 endif()
 
 find_package(Threads)
-find_package(Boost 1.62.0 REQUIRED system)
+find_package(Boost 1.62.0 REQUIRED system filesystem)
 
 include_directories(common)
 

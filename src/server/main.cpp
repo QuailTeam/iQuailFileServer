@@ -6,14 +6,14 @@ int main(int ac, char **av)
 {
   try
   {
-    if (ac != 2)
+    if (ac != 3)
     {
-      std::cerr << "Usage: server <port>\n";
+      std::cerr << "Usage: server <port> <root directory>\n";
       return 1;
     }
 
     boost::asio::io_service io_service;
-    Server s(io_service, std::atoi(av[1]));
+    Server s(io_service, std::atoi(av[1]), av[2]);
     io_service.run();
   }
   catch (std::exception& e)

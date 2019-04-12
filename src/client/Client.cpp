@@ -17,7 +17,8 @@ void Client::doConnect() {
       [this](boost::system::error_code ec, TcpResolverIterator) {
         if (!ec) {
           std::make_shared<CommandManager>(
-              std::make_shared<Network>(std::move(_socket)))
+              std::make_shared<Network>(std::move(_socket)),
+              std::make_shared<FileManager>("."))
               ->start();
         } else {
           std::cerr << "Coudn't connect to host. Please run server "

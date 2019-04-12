@@ -1,5 +1,6 @@
 #pragma once
 
+#include "FileManager.hpp"
 #include "Network.hpp"
 #include <functional>
 
@@ -17,8 +18,10 @@ class Command : public std::enable_shared_from_this<Command> {
 public:
   Command() = delete;
   Command(std::shared_ptr<Network> session,
+          std::shared_ptr<FileManager> fileMgr,
           std::function<void()> exitCallback = nullptr)
-      : _session(std::move(session)), _exitCallback(exitCallback) {}
+      : _session(std::move(session)), _fileMgr(std::move(fileMgr)),
+        _exitCallback(exitCallback) {}
   virtual ~Command() {
     if (_exitCallback)
       _exitCallback();
@@ -46,6 +49,7 @@ private:
 
 protected:
   std::shared_ptr<Network> _session;
+  std::shared_ptr<FileManager> _fileMgr;
 
 private:
   std::function<void()> _exitCallback;
