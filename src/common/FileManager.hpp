@@ -7,8 +7,11 @@ public:
   FileManager(std::string root);
   ~FileManager() {}
 
+  std::string getPath(std::string file) const;
+
+protected:
   bool setRoot(std::string root);
 
-private:
+protected:
   boost::filesystem::path _root;
 };

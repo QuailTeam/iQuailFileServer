@@ -15,7 +15,7 @@ void Server::doAccept() {
     if (!ec) {
       std::make_shared<CommandManager>(
           std::make_shared<Network>(std::move(_socket)),
-          std::make_shared<FileManager>(_root))
+          std::make_shared<SFileManager>(_root))
           ->start();
     }
     doAccept();

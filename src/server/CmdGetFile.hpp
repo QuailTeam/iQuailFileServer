@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Command.hpp"
+#include "SCommand.hpp"
 
-class CmdGetFile : public Command {
+class CmdGetFile : public SCommand {
 public:
-  using Command::Command;
+  using SCommand::SCommand;
   ~CmdGetFile() { std::cerr << "dtor CmdGetFile" << std::endl; }
 
   void start(const std::vector<std::string> &args = {}) final override;

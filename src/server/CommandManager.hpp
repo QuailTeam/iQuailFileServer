@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Command.hpp"
+#include "SCommand.hpp"
 
-class CommandManager : public Command {
+class CommandManager : public SCommand {
 public:
-  using Command::Command;
+  using SCommand::SCommand;
   ~CommandManager() { std::cerr << "dtor CommandManager" << std::endl; }
 
   void start(const std::vector<std::string> &args = {}) final override;

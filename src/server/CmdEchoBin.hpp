@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Command.hpp"
+#include "SCommand.hpp"
 
-class CmdEchoBin : public Command {
+class CmdEchoBin : public SCommand {
 public:
-  using Command::Command;
+  using SCommand::SCommand;
   ~CmdEchoBin() { std::cerr << "dtor CmdEchoBin" << std::endl; }
 
   void start(const std::vector<std::string> &args = {}) final override;

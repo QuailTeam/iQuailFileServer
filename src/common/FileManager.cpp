@@ -13,3 +13,9 @@ bool FileManager::setRoot(std::string root) {
     return true;
   return false;
 }
+
+std::string FileManager::getPath(std::string file) const {
+  path p(_root);
+  p /= file;
+  return p.string();
+}
