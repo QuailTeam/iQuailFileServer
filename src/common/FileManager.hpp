@@ -7,10 +7,11 @@ public:
   FileManager(std::string root);
   ~FileManager() {}
 
-  std::string getPath(std::string file) const;
+  bool getAbsPath(std::string file, std::string &absPath) const;
 
 protected:
-  bool setRoot(std::string root);
+  bool setRoot(boost::filesystem::path root);
+  bool isSafe(boost::filesystem::path path) const;
 
 protected:
   boost::filesystem::path _root;

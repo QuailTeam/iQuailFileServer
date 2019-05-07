@@ -6,7 +6,7 @@ SFileManager::SFileManager(std::string root) : FileManager(root) {
   initVersions();
   if (_versions.empty())
     throw std::runtime_error("No version directory"); // TODO proper exception
-  _root = _versions.begin()->second;
+  setRoot(_versions.begin()->second);
 }
 
 void SFileManager::initVersions() {
@@ -19,7 +19,7 @@ bool SFileManager::setVersion(std::string version) {
   auto v = _versions.find(version);
   if (v == _versions.end())
     return false;
-  _root = v->second;
+  setRoot(v->second);
   return true;
 }
 
