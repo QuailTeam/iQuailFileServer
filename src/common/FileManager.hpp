@@ -1,4 +1,6 @@
 #pragma once
+
+#include "Protocol.h"
 #include <boost/filesystem.hpp>
 
 class FileManager {
@@ -7,7 +9,7 @@ public:
   FileManager(std::string root);
   ~FileManager() {}
 
-  bool getAbsPath(std::string file, std::string &absPath) const;
+  protocol::ErrorCode getAbsPath(std::string file, std::string &absPath) const;
 
 protected:
   bool setRoot(boost::filesystem::path root);

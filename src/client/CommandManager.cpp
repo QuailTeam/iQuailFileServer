@@ -21,7 +21,24 @@ void CommandManager::receiveFile() {
   _session->readFile(input, getAsCallback(&CommandManager::end));
 }
 
-void CommandManager::end() {
-  std::cerr << "File successfully written" << std::endl;
+void CommandManager::end(protocol::ErrorCode e) {
+  switch (e) {
+  case protocol::ErrorCode::Success:
+    std::cerr << "File successfully written" << std::endl;
+    break;
+  case protocol::ErrorCode::InvalidPath:
+    std::cerr << "File not received: Invalid Path" << std::endl;
+    break;
+  case protocol::ErrorCode::IllegalPath:
+    std::cerr << "File not received: Illegal Path" << std::endl;
+    break;
+  default:
+    break;
+  }
   _session->writeString(protocol::command::names[protocol::command::Exit]);
+  _session->readString(getAsCallback(&CommandManager::death));
+}
+
+void CommandManager::death(const std::string &s, protocol::ErrorCode /*e*/) {
+  std::cerr << s << std::endl;
 }

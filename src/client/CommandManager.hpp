@@ -12,5 +12,6 @@ public:
 private:
   void entryPoint();
   void receiveFile();
-  void end();
+  void end(protocol::ErrorCode e);
+  void death(const std::string &, protocol::ErrorCode);
 };

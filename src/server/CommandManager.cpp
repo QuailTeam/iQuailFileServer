@@ -1,6 +1,4 @@
 #include "CommandManager.hpp"
-#include "CmdEcho.hpp"
-#include "CmdEchoBin.hpp"
 #include "CmdGetFile.hpp"
 #include "Protocol.h"
 #include <sstream>
@@ -15,16 +13,12 @@ void CommandManager::entryPoint() {
   _session->readString(getAsCallback(&CommandManager::receiveCommand));
 }
 
-void CommandManager::receiveCommand(const std::string &s) {
+void CommandManager::receiveCommand(const std::string &s, protocol::ErrorCode /*e*/) {
   static const std::unordered_map<
       std::string, void (CommandManager::*)(const std::vector<std::string> &)>
       cmdMap = {
           {protocol::command::names[protocol::command::Exit],
            &CommandManager::closeConnection},
-          {protocol::command::names[protocol::command::Echo],
-           &CommandManager::startCommand<CmdEcho>},
-          {protocol::command::names[protocol::command::EchoBin],
-           &CommandManager::startCommand<CmdEchoBin>},
           {protocol::command::names[protocol::command::GetFile],
            &CommandManager::startCommand<CmdGetFile>},
       };

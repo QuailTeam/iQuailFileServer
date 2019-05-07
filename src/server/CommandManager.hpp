@@ -11,7 +11,7 @@ public:
 
 private:
   void entryPoint();
-  void receiveCommand(const std::string &s);
+  void receiveCommand(const std::string &s, protocol::ErrorCode);
   void closeConnection(const std::vector<std::string> &args = {});
   void sendBadCommand(const std::string &cmd);
 

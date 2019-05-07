@@ -4,8 +4,8 @@ add_executable(iQuailServer
 		main.cpp
 		Server.cpp
 		CommandManager.cpp
-		CmdEcho.cpp
-		CmdEchoBin.cpp
+#		CmdEcho.cpp
+#		CmdEchoBin.cpp
 		CmdGetFile.cpp
 		SFileManager.cpp
 		)

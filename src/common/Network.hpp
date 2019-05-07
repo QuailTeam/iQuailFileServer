@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Protocol.h"
 #include <boost/asio.hpp>
 #include <fstream>
 #include <string>
@@ -15,19 +16,21 @@ public:
   Network(Socket socket) : _socket(std::move(socket)) {}
   ~Network() { std::cerr << "dtor network" << std::endl; }
 
-  void readString(std::function<void(const std::string &)> callback = nullptr);
+  void readString(std::function<void(const std::string &, protocol::ErrorCode)> callback = nullptr);
   void writeString(const std::string &s,
                    std::function<void()> callback = nullptr);
 
   void readBinary(std::function<void(std::shared_ptr<std::vector<char>>)>
-                      callback = nullptr);
+                      callback = nullptr); // deprecated, need to read error code
   void writeBinary(std::shared_ptr<std::vector<char>> b,
-                   std::function<void()> callback = nullptr);
+                   std::function<void()> callback = nullptr); // deprecated, need to write error code
 
   void readFile(const std::string &path,
-                std::function<void()> callback = nullptr);
+                std::function<void(protocol::ErrorCode)> callback = nullptr);
   void writeFile(const std::string &path,
                  std::function<void()> callback = nullptr);
+
+  void writeError(protocol::ErrorCode, std::function<void()> callback = nullptr);
 
 private:
   bool initReadFile(const std::string &path);
