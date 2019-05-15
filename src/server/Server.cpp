@@ -1,6 +1,7 @@
 #include "Server.hpp"
 #include "CommandManager.hpp"
 #include "Network.hpp"
+#include "SFileManager.hpp"
 
 using boost::asio::ip::tcp;
 
@@ -15,7 +16,8 @@ void Server::doAccept() {
     if (!ec) {
       std::make_shared<CommandManager>(
           std::make_shared<Network>(std::move(_socket)),
-          std::make_shared<SFileManager>(_root))
+          std::static_pointer_cast<FileManager>(
+              std::make_shared<SFileManager>(_root)))
           ->start();
     }
     doAccept();

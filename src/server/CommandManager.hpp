@@ -1,24 +1,17 @@
 #pragma once
 
-#include "SCommand.hpp"
+#include "ACommandManager.hpp"
 
-class CommandManager : public SCommand {
+class CommandManager : public ACommandManager {
 public:
-  using SCommand::SCommand;
+  using ACommandManager::ACommandManager;
   ~CommandManager() { std::cerr << "dtor CommandManager" << std::endl; }
 
   void start(const std::vector<std::string> &args = {}) final override;
 
 private:
-  void entryPoint();
+  void entryPoint() final override;
   void receiveCommand(const std::string &s, protocol::ErrorCode);
-  void closeConnection(const std::vector<std::string> &args = {});
-  void sendBadCommand(const std::string &cmd);
-
-  template <class CmdClass>
-  void startCommand(const std::vector<std::string> &args) {
-    std::make_shared<CmdClass>(_session, _fileMgr,
-                               getAsCallback(&CommandManager::entryPoint))
-        ->start(args);
-  }
+  void closeConnection(const std::vector<std::string> &args) final override;
+  //void sendBadCommand(const std::string &cmd);
 };

@@ -1,17 +1,16 @@
 #pragma once
 
-#include "Command.hpp"
+#include "ACommandManager.hpp"
 
-class CommandManager : public Command {
+class CommandManager : public ACommandManager {
 public:
-  using Command::Command;
+  using ACommandManager::ACommandManager;
   ~CommandManager() { std::cerr << "dtor CommandManager" << std::endl; }
 
   void start(const std::vector<std::string> &args = {}) final override;
 
 private:
-  void entryPoint();
-  void receiveFile();
-  void end(protocol::ErrorCode e);
+  void entryPoint() final override;
+  void closeConnection(const std::vector<std::string> &args) final override;
   void death(const std::string &, protocol::ErrorCode);
 };
