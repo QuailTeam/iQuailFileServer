@@ -30,6 +30,7 @@ public:
   void writeFile(const std::string &path,
                  std::function<void()> callback = nullptr);
 
+  void readError(std::function<void(protocol::ErrorCode)> callback = nullptr);
   void writeError(protocol::ErrorCode, std::function<void()> callback = nullptr);
 
 private:

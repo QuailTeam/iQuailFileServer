@@ -2,3 +2,5 @@ Error handling
 FS: escape virtual root
 FS: condjump boost directory_iterator
 CLIENT: auto launch cmd
+
+CmdVersion: espaces dans version

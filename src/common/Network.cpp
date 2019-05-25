@@ -226,6 +226,17 @@ std::size_t Network::readSize(boost::system::error_code &ec) {
   return size;
 }
 
+void Network::readError(std::function<void(protocol::ErrorCode)> callback) {
+  boost::system::error_code ec;
+  protocol::ErrorCode e = static_cast<protocol::ErrorCode>(readSize(ec));
+  if (ec) {
+    handleError(__FUNCTION__, ec);
+    return;
+  }
+  if (callback)
+    callback(e);
+}
+
 void Network::writeError(protocol::ErrorCode e, std::function<void()> callback) {
   boost::system::error_code ec;
   writeSize(e, ec);

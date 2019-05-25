@@ -4,6 +4,7 @@ add_executable(iQuailClient
 		main.cpp
 		Client.cpp
 		CommandManager.cpp
-		CmdGetFile.cpp)
+		CmdGetFile.cpp
+		CmdVersion.cpp)
 
 target_link_libraries(iQuailClient common ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
