@@ -28,6 +28,26 @@ void Network::readString(std::function<void(const std::string &, protocol::Error
       });
 }
 
+void Network::readStrings(std::function<void(const std::vector<std::string> &, protocol::ErrorCode)> callback) {
+  _strsCallback = callback;
+  _strs.clear();
+  this->readString(std::bind(&Network::stringReceiver, this, std::placeholders::_1, std::placeholders::_2));
+}
+
+void Network::stringReceiver(const std::string &s, protocol::ErrorCode e) {
+  if (e == protocol::ErrorCode::EndStrList) {
+    if (_strsCallback)
+      _strsCallback(_strs, protocol::ErrorCode::Success);
+  } else if (e == protocol::ErrorCode::Success) {
+    _strs.emplace_back(s);
+    this->readString(std::bind(&Network::stringReceiver, this, std::placeholders::_1, std::placeholders::_2));
+  } else {
+    _strs.clear();
+    if (_strsCallback)
+      _strsCallback(_strs, e);
+  }
+}
+
 void Network::writeString(const std::string &s,
                           std::function<void()> callback) {
   boost::system::error_code ec;

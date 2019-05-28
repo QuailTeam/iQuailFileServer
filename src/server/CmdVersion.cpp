@@ -7,11 +7,15 @@ void CmdVersion::start(const std::vector<std::string> &args) {
     _session->writeString(_fileMgr->getVersion());
   else if (args[0] == "LIST") {
     std::vector<std::string> versions;
-    std::string result;
+    //std::string result;
     _fileMgr->getVersionNames(versions);
+    // for (const auto& version : versions)
+    //   result += version + " ";
+    // _session->writeString(result);
     for (const auto& version : versions)
-      result += version + " ";
-    _session->writeString(result);
+      _session->writeString(version);
+    _session->writeError(protocol::ErrorCode::EndStrList);
+
   }
   else if (args[0] == "SET" && args.size() > 1) {    
     protocol::ErrorCode e = _fileMgr->setVersion(args[1]) ?

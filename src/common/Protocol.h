@@ -10,6 +10,6 @@ extern const char *names[];
 
 } // namespace command
 
-enum ErrorCode { Success = 0, BadParameter, InvalidPath, IllegalPath };
+enum ErrorCode { Success = 0, EndStrList, BadParameter, InvalidPath, IllegalPath };
 
 } // namespace protocol

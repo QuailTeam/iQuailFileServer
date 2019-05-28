@@ -11,5 +11,6 @@ public:
 
 private:
   void handleString(const std::string &s, protocol::ErrorCode e);
+  void handleStrings(const std::vector<std::string> &strs, protocol::ErrorCode e);
   void handleError(protocol::ErrorCode e);
 };

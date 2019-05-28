@@ -17,6 +17,7 @@ public:
   ~Network() { std::cerr << "dtor network" << std::endl; }
 
   void readString(std::function<void(const std::string &, protocol::ErrorCode)> callback = nullptr);
+  void readStrings(std::function<void(const std::vector<std::string> &, protocol::ErrorCode)> callback = nullptr);
   void writeString(const std::string &s,
                    std::function<void()> callback = nullptr);
 
@@ -37,6 +38,8 @@ private:
   bool initReadFile(const std::string &path);
   bool initWriteFile(const std::string &path);
 
+  void stringReceiver(const std::string &, protocol::ErrorCode);
+
   void writeSize(std::size_t size, boost::system::error_code &ec);
   std::size_t readSize(boost::system::error_code &ec);
 
@@ -53,4 +56,8 @@ private:
   std::array<char, BufferLength> _fileBuff;
   std::streamsize _fileSize;
   std::fstream _file;
+
+  // Strings temporary attributes
+  std::function<void(const std::vector<std::string> &, protocol::ErrorCode)> _strsCallback;
+  std::vector<std::string> _strs;
 };

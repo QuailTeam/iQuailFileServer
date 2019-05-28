@@ -3,4 +3,9 @@ FS: escape virtual root
 FS: condjump boost directory_iterator
 CLIENT: auto launch cmd
 
-CmdVersion: espaces dans version
+CmdVersion: espaces dans version, files...
+
+Commands to implement:
+- get file
+- get version
+- list dir content
