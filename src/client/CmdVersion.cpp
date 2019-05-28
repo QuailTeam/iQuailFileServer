@@ -32,6 +32,7 @@ void CmdVersion::handleStrings(const std::vector<std::string> &strs, protocol::E
   for (const auto &s : strs)
     std::cout << s << std::endl;
 }
+
 void CmdVersion::handleError(protocol::ErrorCode e) {
   if (e == protocol::ErrorCode::Success)
     std::cout << "Version has been set" << std::endl;

@@ -22,9 +22,9 @@ public:
                    std::function<void()> callback = nullptr);
 
   void readBinary(std::function<void(std::shared_ptr<std::vector<char>>)>
-                      callback = nullptr); // deprecated, need to read error code
+                      callback = nullptr); // deprecated, need to read error code and get odd_buff
   void writeBinary(std::shared_ptr<std::vector<char>> b,
-                   std::function<void()> callback = nullptr); // deprecated, need to write error code
+                   std::function<void()> callback = nullptr); // deprecated, need to write error code and get odd_buff
 
   void readFile(const std::string &path,
                 std::function<void(protocol::ErrorCode)> callback = nullptr);
@@ -47,6 +47,9 @@ private:
                    const boost::system::error_code &ec) const;
 
   Socket _socket;
+
+  // Read buff
+  boost::asio::streambuf _readBuff;
 
   // String temporary attributes
   boost::asio::streambuf _strBuff;

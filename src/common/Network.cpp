@@ -13,18 +13,31 @@ void Network::readString(std::function<void(const std::string &, protocol::Error
     return;
   }
   auto self = shared_from_this();
+  std::cerr << "before async_read_until: " << self->_readBuff.size() << std::endl;
   async_read_until(
-      _socket, _strBuff, "\n",
+      _socket, _readBuff, "\n",
       [self, callback](boost::system::error_code ec, size_t bytes) {
         if (ec) {
           self->handleError(__FUNCTION__, ec);
           return;
         }
+        std::cerr << "after async_read_until: " << self->_readBuff.size() << std::endl;
+        // std::istream is(&self->_readBuff);
+        // std::string s;
+        // std::getline(is, s);
+
+        std::string s(boost::asio::buffers_begin(self->_readBuff.data()),
+        boost::asio::buffers_begin(self->_readBuff.data()) + (bytes - 1));
+        self->_readBuff.consume(bytes);
+
+        std::cerr << "after async_read_until consume: " << self->_readBuff.size() << std::endl;
         if (callback)
-          callback(
-              std::string((std::istreambuf_iterator<char>(&self->_strBuff)),
-                          std::istreambuf_iterator<char>())
-                  .substr(0, bytes - 1), protocol::ErrorCode::Success);
+          callback(s, protocol::ErrorCode::Success);
+        // if (callback)
+        //   callback(
+        //       std::string((std::istreambuf_iterator<char>(&self->_strBuff)),
+        //                   std::istreambuf_iterator<char>())
+        //           .substr(0, bytes - 1), protocol::ErrorCode::Success);
       });
 }
 
@@ -39,7 +52,7 @@ void Network::stringReceiver(const std::string &s, protocol::ErrorCode e) {
     if (_strsCallback)
       _strsCallback(_strs, protocol::ErrorCode::Success);
   } else if (e == protocol::ErrorCode::Success) {
-    _strs.emplace_back(s);
+    _strs.push_back(s);
     this->readString(std::bind(&Network::stringReceiver, this, std::placeholders::_1, std::placeholders::_2));
   } else {
     _strs.clear();
@@ -241,8 +254,23 @@ void Network::writeSize(std::size_t size, boost::system::error_code &ec) {
 
 std::size_t Network::readSize(boost::system::error_code &ec) {
   std::size_t size;
-  boost::asio::read(_socket, boost::asio::buffer(&size, sizeof(std::size_t)),
-                    ec); // TODO make async
+  // boost::asio::read(_socket, boost::asio::buffer(&size, sizeof(std::size_t)),
+  //                   ec); // TODO make async
+
+  std::cerr << "before read: " << _readBuff.size() << std::endl;
+  size_t toReceive = sizeof(size) - std::min(sizeof(size), _readBuff.size());
+  boost::asio::read(_socket, _readBuff, boost::asio::transfer_exactly(toReceive), ec); // TODO async
+  std::cerr << "after read: " << _readBuff.size() << std::endl;
+  if (ec) {
+    std::cerr << "whoops" << std::endl;
+    handleError(__FUNCTION__, ec);
+    return 0; //TODO true error handling
+  }
+  // std::istream is(&_readBuff);
+  // is.read(reinterpret_cast<char*>(&size), sizeof(size));
+  std::copy_n(boost::asio::buffers_begin(_readBuff.data()), sizeof(size), &size);
+  _readBuff.consume(sizeof(size));
+  std::cerr << "after read consume: " << _readBuff.size() << std::endl;
   return size;
 }
 
