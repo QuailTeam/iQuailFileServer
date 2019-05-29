@@ -38,7 +38,7 @@ std::string SFileManager::genLsEntry(const boost::filesystem::directory_entry &e
   switch (e.status().type()) {
     case directory_file:
       entry += "d ";
-      entry += "0 "
+      entry += "0 ";
       entry += e.path().filename().c_str();
     break;
     case regular_file:

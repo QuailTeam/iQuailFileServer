@@ -40,7 +40,7 @@ void Network::stringReceiver(const std::string &s, protocol::ErrorCode e) {
       _strsCallback(_strs, protocol::ErrorCode::Success);
     _strsCallback = nullptr;
   } else if (e == protocol::ErrorCode::Success) {
-    _strs.push_back(s);
+    _strs.emplace_back(s);
     this->readString(std::bind(&Network::stringReceiver, this, std::placeholders::_1, std::placeholders::_2));
   } else {
     _strs.clear();
