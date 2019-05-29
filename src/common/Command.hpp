@@ -51,6 +51,6 @@ protected:
   std::shared_ptr<Network> _session;
   std::shared_ptr<FileManager> _fileMgr;
 
-private:
+//private:
   std::function<void()> _exitCallback;
 };
