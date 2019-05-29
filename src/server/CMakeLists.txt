@@ -5,10 +5,9 @@ add_executable(iQuailServer
 		Server.cpp
 		SFileManager.cpp
 		CommandManager.cpp
-#		CmdEcho.cpp
-#		CmdEchoBin.cpp
 		CmdGetFile.cpp
 		CmdVersion.cpp
+		CmdLs.cpp
 		)
 
 target_link_libraries(iQuailServer common ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})

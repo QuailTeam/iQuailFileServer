@@ -1,17 +1,15 @@
 #include "CmdVersion.hpp"
 
 void CmdVersion::start(const std::vector<std::string> &args) {
-  if (args.empty())
+  if (args.empty()) {
+    _session->writeError(protocol::ErrorCode::BadParameter);
     return;
+  }
   if (args[0] == "GET")
     _session->writeString(_fileMgr->getVersion());
   else if (args[0] == "LIST") {
     std::vector<std::string> versions;
-    //std::string result;
     _fileMgr->getVersionNames(versions);
-    // for (const auto& version : versions)
-    //   result += version + " ";
-    // _session->writeString(result);
     for (const auto& version : versions)
       _session->writeString(version);
     _session->writeError(protocol::ErrorCode::EndStrList);

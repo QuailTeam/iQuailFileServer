@@ -1,6 +1,7 @@
 #include "CommandManager.hpp"
 #include "CmdGetFile.hpp"
 #include "CmdVersion.hpp"
+#include "CmdLs.hpp"
 #include "Protocol.h"
 #include <sstream>
 #include <unordered_map>
@@ -10,6 +11,7 @@ void CommandManager::start(const std::vector<std::string> & /*args*/) {
   _cmdMap[protocol::command::names[protocol::command::Exit]] = &ACommandManager::closeConnection;
   _cmdMap[protocol::command::names[protocol::command::GetFile]] = &CommandManager::startCommand<CmdGetFile>;
   _cmdMap[protocol::command::names[protocol::command::Version]] = &CommandManager::startCommand<CmdVersion>;
+  _cmdMap[protocol::command::names[protocol::command::Ls]] = &CommandManager::startCommand<CmdLs>;
   entryPoint();
 }
 
@@ -21,8 +23,3 @@ void CommandManager::closeConnection(
     const std::vector<std::string> & /*args*/) {
   _session->writeString("Closing Connection");
 }
-/*
-void CommandManager::sendBadCommand(const std::string &cmd) {
-  _session->writeString("Bad Command: " + cmd,
-                        getAsCallback(&CommandManager::entryPoint));
-}*/

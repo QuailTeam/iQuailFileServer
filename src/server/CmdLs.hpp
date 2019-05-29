@@ -2,10 +2,10 @@
 
 #include "SCommand.hpp"
 
-class CmdEcho : public SCommand {
+class CmdLs : public SCommand {
 public:
   using SCommand::SCommand;
-  ~CmdEcho() { std::cerr << "dtor CmdEcho" << std::endl; }
+  ~CmdLs() { std::cerr << "dtor CmdLs" << std::endl; }
 
   void start(const std::vector<std::string> &args = {}) final override;
 };

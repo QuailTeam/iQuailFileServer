@@ -4,7 +4,7 @@ namespace protocol {
 
 namespace command {
 
-enum { Exit, Echo, EchoBin, GetFile, Version };
+enum { Exit, Echo, EchoBin, GetFile, Version, Ls };
 
 extern const char *names[];
 

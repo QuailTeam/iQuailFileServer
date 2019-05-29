@@ -13,5 +13,4 @@ private:
   void entryPoint() final override;
   void receiveCommand(const std::string &s, protocol::ErrorCode);
   void closeConnection(const std::vector<std::string> &args) final override;
-  //void sendBadCommand(const std::string &cmd);
 };
