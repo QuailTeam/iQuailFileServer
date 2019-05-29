@@ -15,7 +15,7 @@ bool FileManager::setRoot(path root) {
   return true;
 }
 
-protocol::ErrorCode FileManager::getAbsPath(std::string file, std::string &absPath) const {
+protocol::ErrorCode FileManager::getAbsPath(const std::string &file, std::string &absPath) const {
   path p(_root);
   p /= file;
   if (!exists(p))
@@ -33,4 +33,12 @@ bool FileManager::isSafe(boost::filesystem::path path) const {
   if (a.first->empty())
     return true;
   return false;
+}
+
+bool FileManager::isRegFile(const std::string &absPath) const {
+  return is_regular_file(path(absPath));
+}
+
+bool FileManager::isDirectory(const std::string &absPath) const {
+  return is_directory(path(absPath));
 }

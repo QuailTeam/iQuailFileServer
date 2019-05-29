@@ -9,7 +9,9 @@ public:
   FileManager(std::string root);
   ~FileManager() {}
 
-  protocol::ErrorCode getAbsPath(std::string file, std::string &absPath) const;
+  protocol::ErrorCode getAbsPath(const std::string &file, std::string &absPath) const;
+  bool isRegFile(const std::string &absPath) const;
+  bool isDirectory(const std::string &absPath) const;
 
 protected:
   bool setRoot(boost::filesystem::path root);

@@ -9,6 +9,7 @@ public:
   bool setVersion(std::string version);
   std::string getVersion() const;
   void getVersionNames(std::vector<std::string> &names) const;
+  protocol::ErrorCode listDirectory(const std::string &dir, std::vector<std::string> &list) const;
 
 private:
   void initVersions();

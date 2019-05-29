@@ -32,3 +32,9 @@ void SFileManager::getVersionNames(std::vector<std::string> &names) const {
   for (const auto &v : _versions)
     names.emplace_back(v.first);
 }
+
+protocol::ErrorCode SFileManager::listDirectory(const std::string &dir, std::vector<std::string> &list) const {
+  (void)dir;
+  (void)list;
+  return protocol::ErrorCode::Success;
+}
