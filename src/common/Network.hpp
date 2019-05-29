@@ -51,9 +51,6 @@ private:
   // Read buff
   boost::asio::streambuf _readBuff;
 
-  // String temporary attributes
-  boost::asio::streambuf _strBuff;
-
   // File temporary attributes
   enum { BufferLength = 32768 };
   std::array<char, BufferLength> _fileBuff;
