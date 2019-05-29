@@ -35,18 +35,17 @@ void Network::readStrings(std::function<void(const std::vector<std::string> &, p
 }
 
 void Network::stringReceiver(const std::string &s, protocol::ErrorCode e) {
-  if (e == protocol::ErrorCode::EndStrList) {
-    if (_strsCallback)
-      _strsCallback(_strs, protocol::ErrorCode::Success);
-    _strsCallback = nullptr;
-  } else if (e == protocol::ErrorCode::Success) {
+  if (e == protocol::ErrorCode::Success) {
     _strs.emplace_back(s);
     this->readString(std::bind(&Network::stringReceiver, this, std::placeholders::_1, std::placeholders::_2));
-  } else {
+    return;
+  }
+  if (e != protocol::ErrorCode::EndStrList)
     _strs.clear();
-    if (_strsCallback)
-      _strsCallback(_strs, e);
+  if (_strsCallback) {
+    auto c = _strsCallback;
     _strsCallback = nullptr;
+    c(_strs, e == protocol::ErrorCode::EndStrList ? protocol::ErrorCode::Success : e);
   }
 }
 
