@@ -1,0 +1,9 @@
+This is very much a work in progress. Is currently at a POC level.
+A lot of work is still required to make the code clean.
+A (small) test sample is provided.
+
+The current code has been tetsted on linux, compiled using gcc.
+It compresses quite well python scripts. Patching between two linux kernel
+versions has been tested and found sucessful.
+
+Further reading: http://pop.xmailserver.net/xdfs.pdf
