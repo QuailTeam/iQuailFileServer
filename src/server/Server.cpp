@@ -5,9 +5,10 @@
 
 using boost::asio::ip::tcp;
 
-Server::Server(boost::asio::io_service &ioService, short port, std::string root)
+Server::Server(boost::asio::io_service &ioService, short port,
+const std::string &root, const std::string &lastVersion)
     : _acceptor(ioService, tcp::endpoint(tcp::v4(), port)), _socket(ioService),
-      _root(root) {
+      _root(root), _lastVersion(lastVersion) {
   doAccept();
 }
 
@@ -17,7 +18,7 @@ void Server::doAccept() {
       std::make_shared<CommandManager>(
           std::make_shared<Network>(std::move(_socket)),
           std::static_pointer_cast<FileManager>(
-              std::make_shared<SFileManager>(_root)))
+              std::make_shared<SFileManager>(_root, _lastVersion)))
           ->start();
     }
     doAccept();

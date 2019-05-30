@@ -2,7 +2,7 @@
 
 using namespace boost::filesystem;
 
-FileManager::FileManager(std::string root) {
+FileManager::FileManager(const std::string &root) {
   if (!setRoot(root))
     throw std::runtime_error(
         "FileManager initialization failed"); // TODO proper exception

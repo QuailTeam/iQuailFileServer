@@ -6,7 +6,7 @@
 class FileManager {
 public:
   FileManager() = delete;
-  FileManager(std::string root);
+  FileManager(const std::string &root);
   ~FileManager() {}
 
   protocol::ErrorCode getAbsPath(const std::string &file, std::string &absPath) const;

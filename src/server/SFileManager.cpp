@@ -2,11 +2,19 @@
 
 using namespace boost::filesystem;
 
-SFileManager::SFileManager(std::string root) : FileManager(root) {
+SFileManager::SFileManager(const std::string &root, const std::string &lastVersion)
+: FileManager(root), _lastVersion(lastVersion) {
   initVersions();
   if (_versions.empty())
     throw std::runtime_error("No version directory"); // TODO proper exception
-  setRoot(_versions.begin()->second);
+  if (_lastVersion.empty())
+    setRoot(_versions.begin()->second);
+  else {
+    const auto &dir = _versions.find(_lastVersion);
+    if (dir == _versions.end())
+      throw std::runtime_error("Specified last version does not exist"); // TODO proper exception
+    setRoot(dir->second);
+  }
 }
 
 void SFileManager::initVersions() {
@@ -15,7 +23,7 @@ void SFileManager::initVersions() {
       _versions.emplace(x.path().filename().c_str(), x.path());
 }
 
-bool SFileManager::setVersion(std::string version) {
+bool SFileManager::setVersion(const std::string &version) {
   auto v = _versions.find(version);
   if (v == _versions.end())
     return false;
