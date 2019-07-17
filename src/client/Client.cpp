@@ -21,7 +21,7 @@ void Client::doConnect() {
               std::make_shared<FileManager>(".")) //TODO as param
               ->start();
         } else {
-          std::cerr << "Coudn't connect to host. Please run server "
+          std::cerr << "Couldn't connect to host. Please run server "
                        "or check network connection.\n";
         }
       });
