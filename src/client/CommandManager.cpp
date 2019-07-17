@@ -14,7 +14,7 @@ void CommandManager::start(const std::vector<std::string> & /*args*/) {
 
 void CommandManager::entryPoint() {  
   std::string input;
-  std::cout << "?> ";
+  std::cout << "> ";
   std::getline(std::cin, input);
   receiveCommand(input);
 }

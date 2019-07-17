@@ -18,7 +18,7 @@ void Client::doConnect() {
         if (!ec) {
           std::make_shared<CommandManager>(
               std::make_shared<Network>(std::move(_socket)),
-              std::make_shared<FileManager>("."))
+              std::make_shared<FileManager>(".")) //TODO as param
               ->start();
         } else {
           std::cerr << "Coudn't connect to host. Please run server "
