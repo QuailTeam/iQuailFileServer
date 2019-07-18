@@ -1,6 +1,7 @@
 #pragma once
 
 #include "FileManager.hpp"
+#include <map>
 
 class SFileManager : public FileManager {
 public:
