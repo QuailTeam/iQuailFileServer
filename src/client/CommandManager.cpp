@@ -16,6 +16,8 @@ void CommandManager::entryPoint() {
   std::string input;
   std::cout << "> ";
   std::getline(std::cin, input);
+  if(!std::cin)
+    input = "EXIT";
   receiveCommand(input);
 }
 

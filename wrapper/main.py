@@ -3,12 +3,13 @@
 from wrapper import QuailFS
 
 def main():
-    quailFS = QuailFS()
+    quailFS = QuailFS('../build/iQuailClient', '.')
     if not quailFS.connect('localhost', '4242'):
-        print('Cannot connect to server')
+        print('%s' % quailFS.get_error())
         return
     #quailFS.ls()
-    #quailFS.get_file('hello')
+    quailFS.get_file('hello')
+    quailFS.get_file('./dir/hello')
     if not quailFS.get_file('hell'):
         print('%s' % quailFS.get_error())
     #quailFS.ls('dir')

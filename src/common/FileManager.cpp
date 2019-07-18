@@ -15,16 +15,27 @@ bool FileManager::setRoot(path root) {
   return true;
 }
 
-protocol::ErrorCode FileManager::getAbsPath(const std::string &file, std::string &absPath) const {
+protocol::ErrorCode FileManager::getAbsPath(const std::string &file, std::string &absPath, bool checks) const {
   path p(_root);
   p /= file;
-  if (!exists(p))
-    return protocol::ErrorCode::InvalidPath;
-  p = canonical(p);
-  if (!isSafe(p))
-    return protocol::ErrorCode::IllegalPath;
+  if (checks) {
+    if (!exists(p))
+      return protocol::ErrorCode::InvalidPath;
+    p = canonical(p);
+    if (!isSafe(p))
+      return protocol::ErrorCode::IllegalPath;
+  }
   absPath = p.string();
   return protocol::ErrorCode::Success;
+}
+
+void FileManager::splitDirFile(const std::string &absPath,
+std::string *dir, std::string *file) const {
+  path p(absPath);
+  if (dir)
+    *dir = p.parent_path().string();
+  if (file)
+    *file = p.filename().string();
 }
 
 bool FileManager::isSafe(boost::filesystem::path path) const {

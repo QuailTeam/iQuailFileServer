@@ -6,12 +6,19 @@ void CmdGetFile::start(const std::vector<std::string> &args) {
   std::string cmd = protocol::command::names[protocol::command::GetFile];
   cmd += " ";
   cmd += args[0];
+  std::string absPathFile, absPathDir;
+  _fileMgr->getAbsPath(args[0], absPathFile, false);
+  _fileMgr->splitDirFile(absPathFile, &absPathDir, nullptr);
+  if (!_fileMgr->isDirectory(absPathDir) && !boost::filesystem::create_directories(absPathDir)) {
+    std::cerr << "File not received: cannot create dir list" << std::endl;
+    return;
+  }
   _session->writeString(cmd);
-  //boost::filesystem::create_directories("/tmp/a/b/c");
-  _session->readFile("a", getAsCallback(&CmdGetFile::end));
+  _session->readFile(absPathFile, getAsCallback(&CmdGetFile::end));
 }
 
 void CmdGetFile::end(protocol::ErrorCode e) {
+  //TODO rm directories on failure
   switch (e) {
   case protocol::ErrorCode::Success:
     std::cerr << "File successfully written" << std::endl;

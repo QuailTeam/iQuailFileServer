@@ -9,7 +9,8 @@ public:
   using TcpResolverIterator = TcpResolver::iterator;
   using TcpSocket = boost::asio::ip::tcp::socket;
 
-  Client(IoService &t_ioService, TcpResolverIterator t_endpointIterator);
+  Client(IoService &t_ioService, TcpResolverIterator t_endpointIterator,
+  std::string dl_path);
 
 private:
   void doConnect();
@@ -17,4 +18,5 @@ private:
   TcpResolver m_ioService;
   TcpSocket _socket;
   TcpResolverIterator m_endpointIterator;
+  std::string _dl_path;
 };
