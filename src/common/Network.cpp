@@ -131,6 +131,12 @@ void Network::readFile(const std::string &path,
 
   if (!initReadFile(path))
     return;
+  if (_fileSize == 0) {
+    _file.close();
+    if (callback)
+      callback(protocol::ErrorCode::Success);
+    return;
+  }
   auto self = shared_from_this();
   _socket.async_read_some(
       boost::asio::buffer(_fileBuff.data(), _fileBuff.size()),
@@ -165,8 +171,6 @@ bool Network::initReadFile(const std::string &path) {
     handleError(__FUNCTION__, ec);
     return false;
   }
-  if (!_fileSize)
-    return false;
 
   _file.open(path,
              std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);

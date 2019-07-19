@@ -13,7 +13,7 @@ class QuailFS:
         return list(self.pipe.before.splitlines())[1:]
 
     def _parse_error(self, lines, start='ERROR:'):
-        if lines[0].startswith(start):
+        if len(lines) > 0 and lines[0].startswith(start):
             self.error = lines[0]
             return True
         return False
