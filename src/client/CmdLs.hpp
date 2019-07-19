@@ -5,7 +5,6 @@
 class CmdLs : public Command {
 public:
   using Command::Command;
-  ~CmdLs() { std::cerr << "dtor CmdLs" << std::endl; }
 
   void start(const std::vector<std::string> &args = {}) final override;
 

@@ -7,21 +7,25 @@ def main():
     if not quailFS.connect('localhost', '4242'):
         print('%s' % quailFS.get_error())
         return
-    #quailFS.ls()
     quailFS.get_file('hello')
-    quailFS.get_file('./dir/hello')
-    if not quailFS.get_file('hell'):
+    ls = quailFS.ls('dur')
+    if not ls:
         print('%s' % quailFS.get_error())
-    #quailFS.ls('dir')
-    if not quailFS.ls('dur'):
+    ls = quailFS.ls('.')
+    if not ls:
         print('%s' % quailFS.get_error())
-    #quailFS.list_versions()
-    #quailFS.get_version()
-    #quailFS.set_version('11.0')
-    if not quailFS.set_version('666.0'):
-        print('%s' % quailFS.get_error())
-    #quailFS.get_version()
-    #quailFS.ls()
+    else:
+        for i in ls:
+            print('%s' % i)
+    v = quailFS.get_version()
+    print('Version: %s' % v)
+    vs = quailFS.list_versions()
+    print('Versions:')
+    for version in vs:
+        print('%s' % version)
+    quailFS.set_version('11.0')
+    v = quailFS.get_version()
+    print('Version: %s' % v)
     quailFS.disconnect()
 
 if __name__ == '__main__':

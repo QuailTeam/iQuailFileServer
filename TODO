@@ -2,8 +2,6 @@ Error handling
 FS: escape virtual root
 FS: condjump boost directory_iterator
 CLIENT: auto launch cmd
-SERVER: 'Error: system:32 Broken pipe in operator()' upon 'EXIT' cmd
-CLIENT: GET_FILE create dir tree
 SERVER: multi-client
 
 CmdVersion: espaces dans version, files...

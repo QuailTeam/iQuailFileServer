@@ -20,7 +20,6 @@ class QuailFS:
 
     def connect(self, ip, port):
         args = ' '.join([self.client_bin_path, ip, port, self.dl_path])
-        print('connecting')
         try:
             self.pipe = pexpect.spawnu(args)
         except pexpect.exceptions.ExceptionPexpect:
@@ -38,41 +37,32 @@ class QuailFS:
     def ls(self, path='.'):
         lines = self._send_cmd('LS ' + path)
         if self._parse_error(lines, 'LS failed'):
-            return False
-        for line in lines:
-            print('%s' % line)
-        return True
+            return None
+        return lines[1:]
 
     def get_version(self):
         lines = self._send_cmd('VERSION GET')
-        for line in lines:
-            print('%s' % line)
+        return lines[1]
 
     def list_versions(self):
         lines = self._send_cmd('VERSION LIST')
-        for line in lines:
-            print('%s' % line)
+        return lines[1:]
 
     def set_version(self, version):
         lines = self._send_cmd('VERSION SET ' + version)
         if self._parse_error(lines, 'Invalid command'):
             return False
-        for line in lines:
-            print('%s' % line)
         return True
 
     def get_file(self, path):
         lines = self._send_cmd('GET_FILE ' + path)
         if self._parse_error(lines, 'File not received'):
             return False
-        for line in lines:
-            print('%s' % line)
         return True
 
     def get_error(self):
         return self.error
 
     def disconnect(self):
-        print('disconnecting')
         self.pipe.sendline('EXIT')
         self.pipe.expect(pexpect.EOF)

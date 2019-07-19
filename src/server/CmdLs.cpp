@@ -7,13 +7,17 @@ void CmdLs::start(const std::vector<std::string> &args) {
   }
   std::string dir;
   protocol::ErrorCode e = _fileMgr->getAbsPath(args[0], dir);
-  if (e != protocol::ErrorCode::Success)
+  if (e != protocol::ErrorCode::Success) {
     _session->writeError(e);
+    return;
+  }
 
   std::vector<std::string> content;
   e = _fileMgr->listDirectory(dir, content);
-  if (e != protocol::ErrorCode::Success)
+  if (e != protocol::ErrorCode::Success) {
     _session->writeError(e);
+    return;
+  }
   for (const auto& entry : content)
     _session->writeString(entry);
   _session->writeError(protocol::ErrorCode::EndStrList);
