@@ -117,20 +117,22 @@ void Network::writeBinary(std::shared_ptr<std::vector<char>> b,
 
 void Network::readFile(const std::string &path,
                        std::function<void(protocol::ErrorCode)> callback) {
-  boost::system::error_code ec;
-  protocol::ErrorCode e = static_cast<protocol::ErrorCode>(readSize(ec));
-  if (ec) {
-    handleError(__FUNCTION__, ec);
-    return;
-  }
-  if (e != protocol::ErrorCode::Success) {
-    if (callback)
-      callback(e);
-    return;
-  }
+  if (!_file.is_open()) {
+    boost::system::error_code ec;
+    protocol::ErrorCode e = static_cast<protocol::ErrorCode>(readSize(ec));
+    if (ec) {
+      handleError(__FUNCTION__, ec);
+      return;
+    }
+    if (e != protocol::ErrorCode::Success) {
+      if (callback)
+        callback(e);
+      return;
+    }
 
-  if (!initReadFile(path))
-    return;
+    if (!initReadFile(path))
+      return;
+  }
   if (_fileSize == 0) {
     _file.close();
     if (callback)
@@ -161,10 +163,6 @@ void Network::readFile(const std::string &path,
 }
 
 bool Network::initReadFile(const std::string &path) {
-
-  if (_file.is_open())
-    return true;
-
   boost::system::error_code ec;
   _fileSize = static_cast<std::streamsize>(readSize(ec));
   if (ec) {
@@ -183,18 +181,18 @@ bool Network::initReadFile(const std::string &path) {
 
 void Network::writeFile(const std::string &path,
                         std::function<void()> callback) {
-  boost::system::error_code ec;
-  writeSize(protocol::ErrorCode::Success, ec);
-  if (ec) {
-    handleError(__FUNCTION__, ec);
-    return;
-  }
-  if (!initWriteFile(path)) {
+  if (!_file.is_open()) {
     boost::system::error_code ec;
-    writeSize(
-        0,
-        ec); // TODO reconsider, is this still usefull with new error system ?
-    return;
+    writeSize(protocol::ErrorCode::Success, ec);
+    if (ec) {
+      handleError(__FUNCTION__, ec);
+      return;
+    }
+    if (!initWriteFile(path)) {
+      boost::system::error_code ec;
+      writeSize(0, ec); // TODO reconsider, is this still usefull with new error system ?
+      return;
+    }
   }
   _file.read(_fileBuff.data(), _fileBuff.size()); // TODO check
   auto self = shared_from_this();
@@ -216,9 +214,6 @@ void Network::writeFile(const std::string &path,
 }
 
 bool Network::initWriteFile(const std::string &path) {
-  if (_file.is_open())
-    return true;
-
   _file.open(path,
              std::ofstream::in | std::ofstream::binary | std::ofstream::ate);
   if (_file.fail()) {
@@ -252,7 +247,8 @@ std::size_t Network::readSize(boost::system::error_code &ec) {
     handleError(__FUNCTION__, ec);
     return 0; //TODO true error handling
   }
-  std::copy_n(boost::asio::buffers_begin(_readBuff.data()), sizeof(size), &size);
+  std::copy_n(boost::asio::buffers_begin(_readBuff.data()), sizeof(size),
+    reinterpret_cast<unsigned char*>(&size));
   _readBuff.consume(sizeof(size));
   return size;
 }
