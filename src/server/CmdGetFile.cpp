@@ -12,5 +12,7 @@ void CmdGetFile::start(const std::vector<std::string> &args) {
   else if (!_fileMgr->isRegFile(file))
     _session->writeError(protocol::ErrorCode::InvalidPath);
   else
-    _session->writeFile(file);
+    _session->writeFile(file, getAsCallback(&CmdGetFile::end));
 }
+
+void CmdGetFile::end() {}

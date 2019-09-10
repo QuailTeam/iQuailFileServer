@@ -8,4 +8,5 @@ public:
   ~CmdGetFile() { std::cerr << "dtor CmdGetFile" << std::endl; }
 
   void start(const std::vector<std::string> &args = {}) final override;
+  void end();
 };
