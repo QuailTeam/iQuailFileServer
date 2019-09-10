@@ -27,9 +27,9 @@ public:
                    std::function<void()> callback = nullptr); // deprecated, need to write error code and get odd_buff
 
   void readFile(const std::string &path,
-                std::function<void(protocol::ErrorCode)> callback = nullptr);
+                std::function<void(protocol::ErrorCode)> callback);
   void writeFile(const std::string &path,
-                 std::function<void()> callback = nullptr);
+                 std::function<void()> callback);
 
   void readError(std::function<void(protocol::ErrorCode)> callback = nullptr);
   void writeError(protocol::ErrorCode, std::function<void()> callback = nullptr);
