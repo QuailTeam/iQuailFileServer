@@ -11,6 +11,7 @@ public:
   std::string getVersion() const;
   void getVersionNames(std::vector<std::string> &names) const;
   protocol::ErrorCode listDirectory(const std::string &absDir, std::vector<std::string> &list) const;
+  int getNbrFiles() const;
 
 private:
   void initVersions();

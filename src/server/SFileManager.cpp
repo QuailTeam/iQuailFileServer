@@ -71,3 +71,8 @@ protocol::ErrorCode SFileManager::listDirectory(const std::string &absDir, std::
   }
   return protocol::ErrorCode::Success;
 }
+
+int SFileManager::getNbrFiles() const {
+  return std::count_if(recursive_directory_iterator(_root), recursive_directory_iterator(),
+    static_cast<bool(*)(const path&)>(is_regular_file));
+}
