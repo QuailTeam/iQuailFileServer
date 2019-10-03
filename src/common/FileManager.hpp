@@ -10,9 +10,9 @@ public:
   ~FileManager() {}
 
   protocol::ErrorCode getAbsPath(const std::string &file, std::string &absPath, bool checks = true) const;
-  bool isRegFile(const std::string &absPath) const;
-  bool isDirectory(const std::string &absPath) const;
-  void splitDirFile(const std::string &absPath, std::string *dir, std::string *file) const;
+  static bool isRegFile(const std::string &absPath);
+  static bool isDirectory(const std::string &absPath);
+  static void splitDirFile(const std::string &absPath, std::string *dir, std::string *file);
 
 protected:
   bool setRoot(boost::filesystem::path root);
