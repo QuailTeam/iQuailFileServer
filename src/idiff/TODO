@@ -1,0 +1,13 @@
+- Add a makefile
+- Add comments
+- Add checks (error during read, write, open ect...)
+- Remove uthash, the macros have too large of an overhead
+- Add unit testing
+- Decompression executable
+- Clean up code
+- Tar after patch calculation
+
+Possible features:
+- Multithread
+- Runtime size of words (currently macro). Might not be done for optimisation
+- Fuzzer for testing
