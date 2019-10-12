@@ -1,4 +1,5 @@
 #include "bucket.h"
+#include "helpers.h" 
 
 void initMatch(int fd) {
   char buff[LEN];

@@ -1,3 +1,6 @@
+#ifndef __BUCKET_
+#define __BUCKET_
+
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -25,3 +28,5 @@ struct pair {
 
 struct entry *find_entry(uint32_t addler_key);
 void add_to_bucket(uint32_t addler_key, off_t offset);
+
+#endif /* end of include guard: __BUCKET_ */
