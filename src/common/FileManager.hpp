@@ -7,7 +7,7 @@ class FileManager {
 public:
   FileManager() = delete;
   FileManager(const std::string &root);
-  ~FileManager() {}
+  virtual ~FileManager() {}
 
   protocol::ErrorCode getAbsPath(const std::string &file, std::string &absPath, bool checks = true) const;
   static bool isRegFile(const std::string &absPath);

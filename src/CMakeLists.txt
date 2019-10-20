@@ -11,8 +11,9 @@ find_package(Threads)
 find_package(Boost 1.62.0 REQUIRED system filesystem)
 
 include_directories(common)
+include_directories(idiff/include)
 
+subdirs(idiff)
 subdirs(common)
 subdirs(server)
 subdirs(client)
-subdirs(idiff)
