@@ -1,5 +1,5 @@
 #include "bucket.h"
-#include "helpers.h" 
+#include "helpers.h"
 
 void initMatch(int fd) {
   char buff[LEN];
@@ -59,11 +59,11 @@ int expand_left(int fd_src, int fd_tgt, int offset_src)
   return LEN - max_len;
 }
 
-struct pair findMatch(int fd_src, int fd_tgt, int fd_patch) {
+pair_t findMatch(int fd_src, int fd_tgt, int fd_patch) {
   char buff[LEN];
   int back_track = 0;
-  struct entry *s;
-  struct pair ret;
+  entry_t *s;
+  pair_t ret;
 
   read(fd_tgt, buff, LEN);
   s = find_entry(crc32(buff, LEN, 0));
@@ -75,37 +75,38 @@ struct pair findMatch(int fd_src, int fd_tgt, int fd_patch) {
   }
   ret.off = s->offset;
   ret.l = expand_right(fd_src, fd_tgt, ret.off);
-  /*if( back_track = expand_left(fd_src, fd_tgt, ret.off))
+  if(back_track = expand_left(fd_src, fd_tgt, ret.off))
   {
     lseek(fd_patch, -back_track * 8, SEEK_CUR);
     ret.off -= back_track;
     ret.l +=back_track;
-  }*/
+  }
   return ret;
 }
 
 
 int computeDelta(char *src, char* tgt, char* patch) {
-  off_t i = 0;
+  off_t position = 0;
   char c[1];
   int fd_src = open(src, O_RDONLY);
   int fd_tgt = open(tgt, O_RDONLY);
   int fd_patch = open(patch, O_RDWR || O_CREAT);
   int file_size = lseek(fd_tgt, 0L, SEEK_END);
-  struct pair f_ret;
+  pair_t f_ret;
 
   lseek(fd_tgt, 0L, SEEK_SET);
   initMatch(fd_src);
-  while (i < file_size) {
+  while (position < file_size) {
     f_ret = findMatch(fd_src, fd_tgt, fd_patch);
     if (f_ret.l < LEN) {
       read(fd_tgt, c, 1);
       write_copy(fd_patch, c);
-      i += 1;
+      position++;
+      printf("%d\n", position);
     }
     else {
       write_insert(fd_patch, f_ret);
-      i += f_ret.l;
+      position += f_ret.l;
     }
   }
 }
