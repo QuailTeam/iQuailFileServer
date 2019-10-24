@@ -2,9 +2,9 @@
 
 void write_copy(int fd_tgt, char *c)
 {
-  printf("%d\n", write(fd_tgt, "COPY: ", 6));
-  printf("%d\n", write(fd_tgt, c, 1));
-  printf("%d\n", write(fd_tgt, "\n", 1));
+  write(fd_tgt, "COPY: ", 6);
+  write(fd_tgt, c, 1);
+  write(fd_tgt, "\n", 1);
 }
 
 void write_insert(int fd_tgt, struct pair ret)

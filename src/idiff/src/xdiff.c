@@ -102,7 +102,6 @@ int computeDelta(char const *src, char const *tgt, char const *patch) {
       read(fd_tgt, c, 1);
       write_copy(fd_patch, c);
       position++;
-      printf("%d\n", position);
     }
     else {
       write_insert(fd_patch, f_ret);
