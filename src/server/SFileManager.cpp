@@ -76,3 +76,7 @@ int SFileManager::getNbrFiles() const {
   return std::count_if(recursive_directory_iterator(_root), recursive_directory_iterator(),
     static_cast<bool(*)(const path&)>(is_regular_file));
 }
+
+std::string SFileManager::getLastVersion() const {
+  return _lastVersion;
+}

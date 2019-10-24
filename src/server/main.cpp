@@ -1,3 +1,4 @@
+#include "PatchManager.hpp"
 #include "Server.hpp"
 #include "FileManager.hpp"
 #include <boost/asio.hpp>
@@ -38,8 +39,14 @@ int main(int ac, char **av)
       return 1;
     }
 
+    PatchManager patchManager(solutionDir, lastVersion);
+    if (!patchManager.createPatchDirs()) {
+      std::cerr << "Error: Cannot create patch directories\n";
+      return 1;
+    }
+
     boost::asio::io_service io_service;
-    Server s(io_service, std::atoi(av[1]), av[2], lastVersion);
+    Server s(io_service, std::atoi(av[1]), solutionDir, lastVersion);
     io_service.run();
   }
   catch (std::exception& e)

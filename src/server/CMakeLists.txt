@@ -9,6 +9,7 @@ add_executable(iQuailServer
 		CmdVersion.cpp
 		CmdLs.cpp
 		CmdNbrFiles.cpp
+		PatchManager.cpp
 		)
 
-target_link_libraries(iQuailServer common ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
+target_link_libraries(iQuailServer idiff common ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
