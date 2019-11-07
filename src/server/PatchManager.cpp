@@ -6,8 +6,27 @@ extern "C" {
 // TODO tmp
 #include <iostream>
 
+using namespace boost::filesystem;
+
 bool PatchManager::createPatchDirs() {
-  std::cout << "generating patches" << std::endl;
+  std::cout << "generating patches:" << std::endl;
+
+  for (const auto &v : _versions) {
+    if (v.first == _lastVersion)
+      continue;
+    path patchDir(_versionsDir);
+    patchDir /= getPatchName(v.first);
+    if (exists(patchDir)) {
+      if (is_directory(patchDir))
+        continue;
+      else
+        return false;
+    }
+    if (!boost::filesystem::create_directories(patchDir))
+      return false;
+    std::cout << patchDir << std::endl;
+  }
+
   return true;
   //computeDelta("", "", "");
 

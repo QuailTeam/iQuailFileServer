@@ -14,12 +14,15 @@ public:
   protocol::ErrorCode listDirectory(const std::string &absDir, std::vector<std::string> &list) const;
   int getNbrFiles() const;
   std::string getLastVersion() const;
+  std::string getPatchName(const std::string &oldVersion) const;
 
 private:
   void initVersions();
   std::string genLsEntry(const boost::filesystem::directory_entry &e) const;
+  std::string getPacthConcatStr() const;
 
-private:
+protected:
+  boost::filesystem::path _versionsDir;
   std::string _lastVersion;
   std::map<std::string, boost::filesystem::path> _versions;
 };
