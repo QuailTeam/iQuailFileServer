@@ -9,8 +9,9 @@ extern "C" {
 using namespace boost::filesystem;
 
 bool PatchManager::createPatchDirs() {
-  std::cout << "generating patches:" << std::endl;
-
+  std::cout << "Generating patches:" << std::endl;
+  path lastVDir(_versionsDir);
+  lastVDir /= _lastVersion;
   for (const auto &v : _versions) {
     if (v.first == _lastVersion)
       continue;
@@ -24,9 +25,35 @@ bool PatchManager::createPatchDirs() {
     }
     if (!boost::filesystem::create_directories(patchDir))
       return false;
-    std::cout << patchDir << std::endl;
+    std::cout << "New patch directory: " << getPatchName(v.first) << std::endl;
+    path vDir(_versionsDir);
+    vDir /= v.first;
+    for (auto &&elem : recursive_directory_iterator(lastVDir)) {
+      if (elem.status().type() != regular_file)
+        continue;
+      path relPath = relative(elem.path(), lastVDir);
+      path fileInV(vDir);
+      fileInV /= relPath;
+      path fileInP(patchDir);
+      fileInP /= relPath;
+      boost::filesystem::create_directories(fileInP.parent_path());
+      if (exists(fileInV)) {
+        if (!is_regular_file(fileInV)) {
+          std::cerr << "file to dir transition not implemented yet" << std::endl;
+          return false;
+        }
+        //create patch file
+        std::cout << "  New patched file: " << relPath.string() << std::endl;
+        //computeDelta(fileInV.c_str(), elem.path().c_str(), fileInP.c_str());
+      } else {
+        //create non-patched version of file (simple copy)
+        std::cout << "  New non-patched file: " << relPath.string() << std::endl;
+        copy_file(elem.path(), fileInP);
+      }
+    }
   }
 
+  std::cout << "Generation performed successfully" << std::endl;
   return true;
   //computeDelta("", "", "");
 
