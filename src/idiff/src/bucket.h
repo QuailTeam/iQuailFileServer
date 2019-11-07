@@ -15,16 +15,16 @@
       __typeof__ (b) _b = (b); \
     _a < _b ? _a : _b; })
 
-struct entry {
+typedef struct entry {
   unsigned int key;
   off_t offset;
   UT_hash_handle hh;
-};
+} entry_t;
 
-struct pair {
+typedef struct pair {
   off_t off;
   int l;
-};
+} pair_t;
 
 struct entry *find_entry(uint32_t addler_key);
 void add_to_bucket(uint32_t addler_key, off_t offset);
