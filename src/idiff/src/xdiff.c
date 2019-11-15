@@ -86,7 +86,7 @@ pair_t findMatch(int fd_src, int fd_tgt, int fd_patch) {
 
 
 int computeDelta(char const *src, char const *tgt, char const *patch) {
-  off_t i = 0;
+  off_t position = 0;
   char c[1];
   int fd_src = open(src, O_RDONLY);
   int fd_tgt = open(tgt, O_RDONLY);
