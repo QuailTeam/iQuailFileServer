@@ -39,7 +39,7 @@ int main(int ac, char **av)
       return 1;
     }
 
-    PatchManager patchManager(solutionDir, lastVersion);
+    PatchManager patchManager(solutionDir, lastVersion, true);
     if (!patchManager.createPatchDirs()) {
       std::cerr << "Error: Cannot create patch directories\n";
       return 1;

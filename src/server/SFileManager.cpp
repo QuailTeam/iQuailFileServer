@@ -2,10 +2,10 @@
 
 using namespace boost::filesystem;
 
-SFileManager::SFileManager(const std::string &root, const std::string &lastVersion)
+SFileManager::SFileManager(const std::string &root, const std::string &lastVersion, bool ignorePatch)
 : FileManager(root), _versionsDir(root), _lastVersion(lastVersion) {
   _versionsDir = canonical(_versionsDir);
-  initVersions();
+  initVersions(ignorePatch);
   if (_versions.empty())
     throw std::runtime_error("No version directory"); // TODO proper exception
   if (_lastVersion.empty())
@@ -18,10 +18,10 @@ SFileManager::SFileManager(const std::string &root, const std::string &lastVersi
   }
 }
 
-void SFileManager::initVersions() {
+void SFileManager::initVersions(bool ignorePatch) {
   for (auto &&x : directory_iterator(_root)) //TODO condjump
-    if (is_directory(x.path()) &&
-    x.path().filename().string().find(getPacthConcatStr()) == std::string::npos)
+    if (is_directory(x.path()) && (!ignorePatch ||
+    x.path().filename().string().find(getPacthConcatStr()) == std::string::npos))
       _versions.emplace(x.path().filename().c_str(), x.path());  
 }
 

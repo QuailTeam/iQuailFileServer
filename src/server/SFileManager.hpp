@@ -5,7 +5,7 @@
 
 class SFileManager : public FileManager {
 public:
-  SFileManager(const std::string &root, const std::string &lastVersion);
+  SFileManager(const std::string &root, const std::string &lastVersion, bool ignorePatch = false);
   virtual ~SFileManager() {}
 
   bool setVersion(const std::string &version);
@@ -17,7 +17,7 @@ public:
   std::string getPatchName(const std::string &oldVersion) const;
 
 private:
-  void initVersions();
+  void initVersions(bool ignorePatch);
   std::string genLsEntry(const boost::filesystem::directory_entry &e) const;
   std::string getPacthConcatStr() const;
 
