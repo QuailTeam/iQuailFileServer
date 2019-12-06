@@ -6,7 +6,7 @@ if len(sys.argv) != 4:
 
 source = open(sys.argv[1])
 target = open(sys.argv[2], 'w')
-diff = open(sys.argv[3])
+diff = open(sys.argv[3], 'rb')
 
 for line in diff.readlines():
     if line != "\n":
