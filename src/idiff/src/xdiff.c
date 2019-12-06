@@ -88,9 +88,10 @@ pair_t findMatch(int fd_src, int fd_tgt, int fd_patch) {
 int computeDelta(char const *src, char const *tgt, char const *patch) {
   off_t position = 0;
   char c[1];
+  const mode_t perm = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
   int fd_src = open(src, O_RDONLY);
   int fd_tgt = open(tgt, O_RDONLY);
-  int fd_patch = open(patch, O_RDWR | O_CREAT);
+  int fd_patch = open(patch, O_RDWR | O_CREAT, perm);
   int file_size = lseek(fd_tgt, 0L, SEEK_END);
   pair_t f_ret;
 
@@ -108,4 +109,8 @@ int computeDelta(char const *src, char const *tgt, char const *patch) {
       position += f_ret.l;
     }
   }
+  close(fd_src);
+  close(fd_tgt);
+  close(fd_patch);
+  return 0;
 }

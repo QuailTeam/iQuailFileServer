@@ -44,7 +44,7 @@ bool PatchManager::createPatchDirs() {
         }
         //create patch file
         std::cout << "  New patched file: " << relPath.string() << std::endl;
-        //computeDelta(fileInV.c_str(), elem.path().c_str(), fileInP.c_str());
+        computeDelta(fileInV.c_str(), elem.path().c_str(), fileInP.c_str());
       } else {
         //create non-patched version of file (simple copy)
         std::cout << "  New non-patched file: " << relPath.string() << std::endl;
