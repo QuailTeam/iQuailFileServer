@@ -2,6 +2,7 @@
 
 #include "Command.hpp"
 #include <unordered_map>
+#include <utility>
 
 class ACommandManager : public Command {
 public:
@@ -22,5 +23,5 @@ protected:
 
 protected:
   typedef void (ACommandManager::*Callback)(const std::vector<std::string> &);
-  std::unordered_map<std::string, Callback> _cmdMap;
+  std::unordered_map<std::string, std::pair<bool, Callback> > _cmdMap; //bool defines if we split arguments
 };
