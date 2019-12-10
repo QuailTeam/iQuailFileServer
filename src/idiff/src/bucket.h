@@ -8,7 +8,7 @@
 
 #include "uthash-master/src/uthash.h"
 
-#define LEN 16 //length of the words hashed
+#define LEN 5 //length of the words hashed
 #define BUFFER_LENGTH 4096 //length of buffer for comparison
 #define min(a,b) \
   ({ __typeof__ (a) _a = (a); \

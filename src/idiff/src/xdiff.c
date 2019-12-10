@@ -19,24 +19,16 @@ void initMatch(int fd) {
 
 int expand_right(int fd_src, int fd_tgt, int offset_src)
 {
-  int len = 0;
-  int max_len = 0;
+  off_t len = 0;
+  off_t read_bytes;
+  off_t max_len = 0;
   char buff_src[BUFFER_LENGTH];
   char buff_tgt[BUFFER_LENGTH];
 
   lseek(fd_src, offset_src, SEEK_SET);
-  max_len = min(read(fd_src, buff_src, BUFFER_LENGTH), read(fd_tgt, buff_tgt, BUFFER_LENGTH));
-  while(len % BUFFER_LENGTH <= max_len && !strncmp(buff_src, buff_tgt, len % BUFFER_LENGTH) )
-  {
-    len++;
-    if (len % BUFFER_LENGTH == 0)
-    {
-      if(read(fd_src, buff_src, BUFFER_LENGTH) < BUFFER_LENGTH || read(fd_tgt, buff_tgt, BUFFER_LENGTH) < BUFFER_LENGTH)
-        break;
-    }
-  }
-  lseek(fd_tgt, -((len / BUFFER_LENGTH + 1) * BUFFER_LENGTH) + len, SEEK_CUR);
-  return len;
+  max_len = min(read(fd_src, buff_src, BUFFER_LENGTH), (read_bytes=read(fd_tgt, buff_tgt, BUFFER_LENGTH)));
+  lseek(fd_tgt, -read_bytes, SEEK_CUR);
+  return strdiff(buff_src, buff_tgt, max_len);
 }
 
 int expand_left(int fd_src, int fd_tgt, int offset_src)
@@ -46,6 +38,7 @@ int expand_left(int fd_src, int fd_tgt, int offset_src)
   off_t offset_tgt = lseek(fd_tgt, 0, SEEK_CUR);
   char buff_src[LEN];
   char buff_tgt[LEN];
+
   if (offset_src < LEN || offset_tgt < LEN)
     return len;
   lseek(fd_tgt, -LEN, SEEK_CUR);
@@ -64,10 +57,11 @@ pair_t findMatch(int fd_src, int fd_tgt, int fd_patch) {
   int back_track = 0;
   entry_t *s;
   pair_t ret;
-
-  read(fd_tgt, buff, LEN);
-  s = find_entry(crc32(buff, LEN, 0));
-  lseek(fd_tgt, -LEN, SEEK_CUR);
+  int read_bytes;
+  if((read_bytes = read(fd_tgt, buff, LEN)) < LEN)
+      buff[read_bytes] = 0;
+  s = find_entry(crc32(buff, read_bytes, 0));
+  lseek(fd_tgt, -read_bytes, SEEK_CUR);
   if (s == NULL) {
     ret.off = -1;
     ret.l = -1;
@@ -75,19 +69,13 @@ pair_t findMatch(int fd_src, int fd_tgt, int fd_patch) {
   }
   ret.off = s->offset;
   ret.l = expand_right(fd_src, fd_tgt, ret.off);
-  if(back_track = expand_left(fd_src, fd_tgt, ret.off))
-  {
-    lseek(fd_patch, -back_track * 8, SEEK_CUR);
-    ret.off -= back_track;
-    ret.l +=back_track;
-  }
   return ret;
 }
 
 
 int computeDelta(char const *src, char const *tgt, char const *patch) {
   off_t position = 0;
-  char c[1];
+  char c;
   const mode_t perm = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
   int fd_src = open(src, O_RDONLY);
   int fd_tgt = open(tgt, O_RDONLY);
@@ -100,13 +88,14 @@ int computeDelta(char const *src, char const *tgt, char const *patch) {
   while (position < file_size) {
     f_ret = findMatch(fd_src, fd_tgt, fd_patch);
     if (f_ret.l < LEN) {
-      read(fd_tgt, c, 1);
-      write_copy(fd_patch, c);
+      read(fd_tgt, &c, 1);
+      write_copy(fd_patch, &c);
       position++;
     }
     else {
       write_insert(fd_patch, f_ret);
       position += f_ret.l;
+      lseek(fd_tgt, f_ret.l, SEEK_CUR);
     }
   }
   close(fd_src);
