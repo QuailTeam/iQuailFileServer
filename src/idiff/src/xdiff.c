@@ -26,7 +26,8 @@ int expand_right(int fd_src, int fd_tgt, int offset_src)
   char buff_tgt[BUFFER_LENGTH];
 
   lseek(fd_src, offset_src, SEEK_SET);
-  max_len = min(read(fd_src, buff_src, BUFFER_LENGTH), (read_bytes=read(fd_tgt, buff_tgt, BUFFER_LENGTH)));
+  max_len = min(read(fd_src, buff_src, BUFFER_LENGTH), \
+  (read_bytes=read(fd_tgt, buff_tgt, BUFFER_LENGTH)));
   lseek(fd_tgt, -read_bytes, SEEK_CUR);
   return strdiff(buff_src, buff_tgt, max_len);
 }

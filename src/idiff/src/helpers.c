@@ -24,6 +24,6 @@ void write_insert(int fd_tgt, struct pair ret)
 off_t strdiff(const char *s1, const char *s2, off_t max)
 {
   off_t i = 0;
-  for (i=0; s1[i] == s2[i] && i < max; i++);
+  for (i=0; i < max && s1[i] == s2[i] ; i++);
   return i;
 }
