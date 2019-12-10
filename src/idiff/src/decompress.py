@@ -7,6 +7,8 @@ def decompress(sourcename, targetname, diffname):
     source = open(sourcename, 'rb')
     buffer = b''
     for byte in bytes_from_file(diffname):
+        if byte == 199:
+            print(buffer)
         if byte == ord(b'\n') and len(buffer):
             try:
                 (header, arg) = buffer.split(b':', maxsplit=1)
@@ -17,11 +19,15 @@ def decompress(sourcename, targetname, diffname):
                 elif header == b'COPY' and len(arg) > 1:
                     target.write(bytes([arg[1]]))
                 elif header == b'COPY':
+                    if byte == 199:
+                        print("write", byte)
                     target.write(bytes([byte]))
             except Exception as e:
                 print(e)
             buffer = b''
         else:
+            if buffer == b'\n':
+                buffer = b''
             buffer += bytes([byte])
     target.close()
     source.close()
