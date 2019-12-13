@@ -36,8 +36,10 @@ int expand_right(int fd_src, int fd_tgt, int offset_src)
   char buff_src[BUFFER_LENGTH];
   char buff_tgt[BUFFER_LENGTH];
 
+  // loop reading a buffer a data and comparing them. If the buffers are
+
+  lseek(fd_src, offset_src, SEEK_SET);
   do {
-  lseek(fd_src, offset_src + len, SEEK_SET);
   max_len = min(read(fd_src, buff_src, BUFFER_LENGTH), \
   (read_bytes = read(fd_tgt, buff_tgt, BUFFER_LENGTH)));
   if (max_len == -1)
