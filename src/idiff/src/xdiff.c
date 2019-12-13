@@ -134,6 +134,7 @@ int computeDelta(char const *src, char const *tgt,
       lseek(fd_tgt, f_ret.l, SEEK_CUR);
     }
   }
+  delete_all();
   close(fd_src);
   close(fd_tgt);
   close(fd_patch);
