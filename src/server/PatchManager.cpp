@@ -48,7 +48,7 @@ bool PatchManager::createPatchDirs() {
         }
         //create patch file
         std::cout << "  New patched file: " << relPath.string() << std::endl;
-        if (computeDelta(fileInV.c_str(), elem.path().c_str(), fileInP.c_str(), 3221225472) != 0) {
+        if (computeDelta(fileInV.c_str(), elem.path().c_str(), fileInP.c_str(), _maxMem) != 0) {
           std::cerr << "Error: computeDelta() failed: " << strerror(errno) << std::endl;
           return false;
         }
