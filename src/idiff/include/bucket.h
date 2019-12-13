@@ -28,5 +28,5 @@ typedef struct pair {
 
 struct entry *find_entry(uint32_t addler_key);
 int add_to_bucket(uint32_t addler_key, off_t offset);
-void delete_all()
+void delete_all();
 #endif /* end of include guard: __BUCKET_ */
