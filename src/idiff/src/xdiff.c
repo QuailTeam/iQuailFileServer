@@ -30,8 +30,8 @@ int expand_right(int fd_src, int fd_tgt, int offset_src)
 {
   off_t len = 0;
   off_t tmp_len = 0;
-  ssize_t read_bytes;
-  ssize_t total_read;
+  ssize_t read_bytes = 0;
+  ssize_t total_read = 0;
   off_t max_len = 0;
   char buff_src[BUFFER_LENGTH];
   char buff_tgt[BUFFER_LENGTH];
