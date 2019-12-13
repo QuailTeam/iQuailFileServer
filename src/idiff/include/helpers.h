@@ -1,6 +1,10 @@
 #ifndef __HELPERS_
 #define __HELPERS_
 
+#define ERROR_READ -1
+#define ERROR_WRITE -2
+#define ERROR_MALLOC -3
+
 #include "bucket.h"
 #include "stdio.h"
 

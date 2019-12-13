@@ -6,9 +6,9 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include "uthash-master/src/uthash.h"
+#include "uthash.h"
 
-#define LEN 5 //length of the words hashed
+#define LEN 256 //length of the words hashed
 #define BUFFER_LENGTH 4096 //length of buffer for comparison
 #define min(a,b) \
   ({ __typeof__ (a) _a = (a); \
@@ -27,6 +27,6 @@ typedef struct pair {
 } pair_t;
 
 struct entry *find_entry(uint32_t addler_key);
-void add_to_bucket(uint32_t addler_key, off_t offset);
+int add_to_bucket(uint32_t addler_key, off_t offset);
 
 #endif /* end of include guard: __BUCKET_ */
