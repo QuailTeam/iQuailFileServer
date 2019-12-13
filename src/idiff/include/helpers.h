@@ -4,6 +4,7 @@
 #define ERROR_READ -1
 #define ERROR_WRITE -2
 #define ERROR_MALLOC -3
+#define ERROR_OPEN -4
 
 #include "bucket.h"
 #include "stdio.h"

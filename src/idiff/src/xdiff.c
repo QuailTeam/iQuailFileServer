@@ -1,7 +1,11 @@
 #include "bucket.h"
 #include "helpers.h"
 
-/*This small library is a small differential compression library */
+/*This small library is a small differential compression library
+  It first calculates a hash table, before comparing the hashes of the target
+  file to the source file.
+  initMatch -> findMatch -> expand_right (-> expand_left)
+*/
 
 int initMatch(int fd, size_t max_memory) {
   char buff[LEN];
@@ -25,28 +29,30 @@ int initMatch(int fd, size_t max_memory) {
 int expand_right(int fd_src, int fd_tgt, int offset_src)
 {
   off_t len = 0;
+  off_t tmp_len = 0;
   ssize_t read_bytes;
+  ssize_t total_read;
   off_t max_len = 0;
   char buff_src[BUFFER_LENGTH];
   char buff_tgt[BUFFER_LENGTH];
 
-  lseek(fd_src, offset_src, SEEK_SET);
+  do {
+  lseek(fd_src, offset_src + len, SEEK_SET);
   max_len = min(read(fd_src, buff_src, BUFFER_LENGTH), \
   (read_bytes = read(fd_tgt, buff_tgt, BUFFER_LENGTH)));
   if (max_len == -1)
     return ERROR_READ;
-
-  len = strdiff(buff_src, buff_tgt, max_len);
-  if (len == BUFFER_LENGTH)
-    len += expand_right(fd_src, fd_tgt, offset_src + BUFFER_LENGTH);
-  lseek(fd_tgt, -read_bytes, SEEK_CUR);
+  tmp_len = strdiff(buff_src, buff_tgt, max_len);
+  len += tmp_len;
+  total_read += read_bytes;
+} while(tmp_len == BUFFER_LENGTH);
+  lseek(fd_tgt, -total_read, SEEK_CUR);
   return len;
 }
 
 
 /*Expand left is currently unused. This will somewhat reduce the compression
 Needs to be fixed */
-
 
 int expand_left(int fd_src, int fd_tgt, int offset_src)
 {
@@ -105,7 +111,9 @@ int computeDelta(char const *src, char const *tgt,
   int file_size = lseek(fd_tgt, 0L, SEEK_END);
   pair_t f_ret;
 
-  lseek(fd_tgt, 0L, SEEK_SET);
+  if (fd_src == -1 || fd_tgt == -1 || fd_patch == -1)
+    return ERROR_OPEN;
+  lseek(fd_tgt, 0L, SEEK_SET); //Technically not needed, this is more done for safety sake
   if (initMatch(fd_src, max_memory) == -1)
     return ERROR_MALLOC;
   while (position < file_size) {
