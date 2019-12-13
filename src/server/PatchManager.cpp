@@ -8,6 +8,10 @@ extern "C" {
 
 using namespace boost::filesystem;
 
+PatchManager::PatchManager(const std::string &root, const std::string &lastVersion, size_t maxMem)
+  : SFileManager(root, lastVersion, true), _maxMem(maxMem * 1000000) {
+}
+
 bool PatchManager::createPatchDirs() {
   std::cout << "Generating patches:" << std::endl;
   path lastVDir(_versionsDir);
